@@ -11,9 +11,10 @@ names = pandas.read_excel('Coordinates.xlsx')
 #       'Notes'],
 #      dtype='object')
 
-for i in range(1,len(names['Image Name'].values)):
-	filename = "pos_" + names['Instr'][i] + ".info"
-	while(names['Image Name'][i] != None):
+i = 0
+while(i < len(names['Image Name'])):
+	filename = "pos_" + str(names['Instr'][i]) + ".info"
+	if(filename != "pos_nan.info" and str(names['Image Name'][i]) != 'nan'):
 		with open(filename , 'a') as out:
-			print(r"OpenCV Name\n(x y width height)")
-			out.write(names['Image Name'][i] + names[r"OpenCV Name\n(x y width height)"][i] + '\n')
+			out.write(str(names['Image Name'][i]) + " 1 " + str(names[r"OpenCV Name(x y width height)"][i]) + '\n')
+	i+=1
