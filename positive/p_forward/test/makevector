@@ -1,2 +1,2 @@
 #Makes vector file for cascade classifier. Can change dimensions of vecotr to experiment.
-opencv_createsamples -info pos_fwd.info -num 27 -w 48 -h 64 -vec fwd.vec
+opencv_createsamples -info pos_fwd.info -num 3 -w 48 -h 64 -vec fwd.vec

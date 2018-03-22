@@ -1,4 +1,4 @@
 #Trains a cascade classifier and puts the data into a new folder 'cascadedata' It will use bg.txt for the negative images and fwd.vec for negatve images
 #It will be trained in two stages and use featureType LBP
-opencv_traincascade -data cascadedata -vec fwd.vec -bg ../../negative/bg.txt -numPos 24 -numNeg 82 -numStages 2 -w 48 -h 64 -featureType LBP
+sudo opencv_traincascade -data cascadedata -vec fwd.vec -bg ../../../negative/bgsmall.txt -numPos 2 -numNeg 20 -numStages 2 -w 48 -h 64 -featureType LBP
 
