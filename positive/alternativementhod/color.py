@@ -1,7 +1,14 @@
 import numpy as np
 import cv2
+import argparse
 
-img = cv2.imread('IMG_7533_small.jpg')
+#img = cv2.imread('IMG_7527_small.jpg')
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", help="path to image")
+args = vars(ap.parse_args())
+
+img = cv2.imread(args["image"])
 
 #for pixels in img, block off pixels into separate 50x50 blocks at about 40% into the x axis of the image (2/5 the max width)
 #go down each block as see if any of the blocks contain one of our colors. If they do, they append that code to a text file (or python file) and go to the next block 
