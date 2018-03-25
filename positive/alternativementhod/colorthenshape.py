@@ -2,6 +2,7 @@ from shapedetector import ShapeDetector
 import numpy as np
 import cv2
 import argparse
+from operator import itemgetter
 import imutils
 
 ap = argparse.ArgumentParser()
@@ -10,18 +11,19 @@ args = vars(ap.parse_args())
 
 img = cv2.imread(args["image"])
 
-#list of boundaries for the colors in the following order: Blue, Green, Yellow, Red, Gray, White
+#list of boundaries for the colors in the following order: Blue, Green, Yellow, Red, White
 boundaries = [
         ([100, 41, 21], [192, 102, 70]),
         ([41, 68, 24], [112,166,106]),
         ([70, 183, 120], [115, 253, 255]),
         ([29,39,140], [100,100,255]),
-        ([93, 95, 96], [149, 169, 179]),
         ([160, 180, 185], [255, 255, 255])
 ]
 
 #array for the number of times an instruction has been output to the text file, to keep track of which instructions have already been accounted for 
-numinstructs = [0,0,0,0,0,0]
+instructs = [] 
+i = 0
+abr = ['b','g','y','r','w']
 
 for (lower, upper) in boundaries:
 	lower = np.array(lower, dtype='uint8')
@@ -44,17 +46,44 @@ for (lower, upper) in boundaries:
 	sd = ShapeDetector()
 
 	for c in cnts:
-        	shape = sd.detect(c)
-    
-        	c = c.astype("float")
-        	c *= ratio
-        	c = c.astype("int")
-        	cv2.drawContours(output, [c], -1, (0,255,0), 2)
-    	
-        	#cv2.imshow("Image", output)
-        	#cv2.waitKey(0)
+		shape = sd.detect(c)
+		
+		c = c.astype("float")
+		c *= ratio
+		c = c.astype("int")
+		x,y,w,h = cv2.boundingRect(c)
+		#print(str(x) + ", " + str(y) + ", " + str(w) + ", " + str(h) + "....")
+		
+		cv2.drawContours(output, [c], -1, (0,255,0), 2)
+		instructs.append((abr[i], y))
+		#get roi of original image
+		try:
+			#cv2.imshow("img", img)
+			#cv2.waitKey(0)
+			cv2.imshow("Instruct", img[y:(y+h), x:(x+w)])
+			cv2.waitKey(0)
+		except:
+			print("Zero value")
+		#cv2.imshow("Image", output)
+		#cv2.waitKey(0)
 	#end shape detetion script
 	
 	cv2.imshow("images", np.hstack([img, output]))
 	cv2.waitKey(0)
+	i += 1
+print(instructs)
+instructs.sort(key=itemgetter(1))
+print(instructs)
 
+code = open("codetest.txt", 'w')
+for lines in instructs:
+	if(lines[0] == 'b'):
+		code.write('forward command\n')
+	elif(lines[0] == 'g'):
+		code.write('turn left\n')
+	elif(lines[0] == 'y'):
+		code.write('preliniary for\n')
+	elif(lines[0] == 'r'):
+		code.write('turn right\n')
+	else:
+		code.write('number\n')
