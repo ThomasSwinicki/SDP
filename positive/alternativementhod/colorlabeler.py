@@ -13,13 +13,13 @@ class ColorLabeler:
 		self.colorNames =  []
 		for(i, (name,rgb)) in enumerate(colors.items()) :
 			self.lab[i] = rgb
-			slef.colorNames.append(name)
+			self.colorNames.append(name)
 
 		self.lab =cv2.cvtColor(self.lab, cv2.COLO_RGB2LAB)
 
 	def label(self, image c):
 		mask = np.zeros(image.shape[:2], dtype="uint8")
-		cv2.drawContours(maks, [c], -1, 255, -1)
+		cv2.drawContours(mask, [c], -1, 255, -1)
 		mask = cv2.erode(mask, None, iterations=2)
 		mean = cv2.mean(image, mask=mask)[:3]
 
