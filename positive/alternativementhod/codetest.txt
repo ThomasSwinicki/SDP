@@ -1,7 +1,10 @@
+preliniary for
 number
 preliniary for
 number
 forward command
-forward command
-turn right
 number
+turn right
+turn left
+turn left
+turn left

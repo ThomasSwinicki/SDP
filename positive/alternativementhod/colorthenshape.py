@@ -9,7 +9,9 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="path to input image")
 args = vars(ap.parse_args())
 
-img = cv2.imread(args["image"])
+imgin = cv2.imread(args["image"])
+
+img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 
 #list of boundaries for the colors in the following order: Blue, Green, Yellow, Red, White
 boundaries = [
