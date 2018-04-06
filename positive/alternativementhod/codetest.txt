@@ -1,10 +1,19 @@
-preliniary for
-number
-preliniary for
-number
 forward command
 number
+turn left
+preliniary for
 turn right
-turn left
-turn left
-turn left
+preliniary for
+preliniary for
+number
+preliniary for
+preliniary for
+number
+preliniary for
+number
+preliniary for
+number
+number
+number
+number
+number
