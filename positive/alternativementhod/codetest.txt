@@ -1,19 +1,5 @@
-forward command
-number
-turn left
+preliniary for
+preliniary for
 preliniary for
 turn right
-preliniary for
-preliniary for
-number
-preliniary for
-preliniary for
-number
-preliniary for
-number
-preliniary for
-number
-number
-number
-number
-number
+turn right

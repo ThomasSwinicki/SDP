@@ -8,6 +8,7 @@ ap.add_argument("-i", "--image", required=True, help="path to input image")
 args = vars(ap.parse_args())
 
 img = cv2.imread(args["image"])
+args["image"] = args["image"][:-4]
 
 #img = cv2.imread('IMG_7559.jpg')
 

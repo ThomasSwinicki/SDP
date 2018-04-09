@@ -24,7 +24,7 @@ class Calibrator:
 		#green = img[470:490,300:400]
 		#blue = img[560:580,300:400]
 		#white = img[650:670,300:400]	
-		colors = [red, yellow, green, blue, white]
+		colors = [red, yellow, green, blue] #, white]
 
 		for c in colors:
 			cv2.imshow('ROI', c)
@@ -34,10 +34,10 @@ class Calibrator:
 		vals = [[] for i in range(5)]
 		#make i a tenth of the larger edge of the ROI
 		for c in range(len(colors)):
-			for j in range(1,math.floor(width/12)):
-				for i in range(1, math.floor(height/12)):
+			for j in range(1,math.floor(width/13)):
+				for i in range(1, math.floor(height/13)):
 					#to access HSV of an image use image[x][y][z], where x,y,z are the HSV values resepctively
-					vals[c].append((colors[c][i*12][j*12][0], colors[c][i*12][j*12][1], colors[c][i*12][j*12][2]))
+					vals[c].append((colors[c][i*13][j*13][0], colors[c][i*13][j*13][1], colors[c][i*13][j*13][2]))
 
 
 		#get min and max of each
@@ -74,7 +74,7 @@ class Calibrator:
 		#	huemaxs.append(h[0]);
 		#print(huemins)
 		#print(huemaxs)
-		for i in range(5):
+		for i in range(4):
 			self.bounds.append((colormins[i],colormaxs[i]))
 			#self.bounds.append((huemins[i],huemaxs[i]))	
 

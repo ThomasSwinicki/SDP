@@ -17,9 +17,15 @@ img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 #for RGB
 #img = cv2.imread(args["image"])
 
+#boundaries are in the order of Red, Yellow, Green, Blue
 calib = Calibrator()
 boundaries = calib.hueRange()
 print(boundaries)
+boundaries[2][0][0] += 0;
+boundaries[2][1][0] += -1;
+#change the ranges for green to be RGB
+boundaries[2] = ([41, 68, 24], [112,166,106])
+print(boundaries);
 #boundaries = [(220,250),(85,140),(40,70),(0,20),(65,115)]
 #boundaries = [([115,100,195] , [120,190,230]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
 #boundaries = [([110,0,0] , [120,255,255]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
@@ -45,9 +51,13 @@ for (lower, upper) in boundaries:
 	lower = np.array(lower, dtype='uint8')
 	upper = np.array(upper, dtype='uint8')
 
-	mask = cv2.inRange(img, lower, upper)
-	output = cv2.bitwise_and(img, img, mask=mask)
-	
+	if i != 2:
+		mask = cv2.inRange(img, lower, upper)
+		output = cv2.bitwise_and(img, img, mask=mask)
+	else:#use RGB for green
+		tempimg = cv2.cvtColor(img, cv2.COLOR_HSV2RGB);
+		mask = cv2.inRange(tempimg, lower, upper);
+		output = cv2.bitwise_and(img, img, mask=mask)
 	#shape detection
 	resized = imutils.resize(output, width=300)
 	ratio = output.shape[0] / float(resized.shape[0])
@@ -56,8 +66,9 @@ for (lower, upper) in boundaries:
 	temp = cv2.cvtColor(resized, cv2.COLOR_HSV2RGB)
 	gray = cv2.cvtColor(temp, cv2.COLOR_RGB2GRAY)
 	
-	#for RGB
-	#gray = cv2.cvtColor(resized, cv2.COLOR_RGB2GRAY)
+	if i==2:
+		#for RGB
+		gray = cv2.cvtColor(resized, cv2.COLOR_RGB2GRAY)
 	blurred = cv2.GaussianBlur(gray, (5,5), 0)
 	thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
 	
@@ -65,7 +76,7 @@ for (lower, upper) in boundaries:
         cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	sd = ShapeDetector()
-
+	
 	for c in cnts:
 		shape = sd.detect(c)
 		
