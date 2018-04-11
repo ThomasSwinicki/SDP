@@ -54,6 +54,8 @@ for (lower, upper) in boundaries:
 	if i != 2:
 		mask = cv2.inRange(img, lower, upper)
 		output = cv2.bitwise_and(img, img, mask=mask)
+		cv2.imshow("output", output)
+		cv2.waitKey(0)
 	else:#use RGB for green
 		tempimg = cv2.cvtColor(img, cv2.COLOR_HSV2RGB);
 		mask = cv2.inRange(tempimg, lower, upper);

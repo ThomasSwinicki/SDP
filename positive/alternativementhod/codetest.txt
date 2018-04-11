@@ -1,5 +1,3 @@
-preliniary for
-preliniary for
-preliniary for
-turn right
-turn right
+forward command
+forward command
+forward command
