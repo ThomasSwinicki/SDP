@@ -1,3 +1,10 @@
 forward command
 forward command
 forward command
+forward command
+forward command
+forward command
+forward command
+turn left
+preliniary for
+turn right

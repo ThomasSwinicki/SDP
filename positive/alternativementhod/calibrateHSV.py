@@ -92,10 +92,10 @@ class Calibrator:
 		vals = [[] for i in range(5)]
 		#make i a tenth of the larger edge of the ROI
 		for c in range(len(colors)):
-			for j in range(1,math.floor(width/15)):
-				for i in range(1, math.floor(height/15)):
+			for j in range(1,math.floor(width/10)):
+				for i in range(1, math.floor(height/10)):
 					#to access HSV of an image use image[x][y][z], where x,y,z are the HSV values resepctively
-					vals[c].append((colors[c][i*15][j*15][0], colors[c][i*15][j*15][1], colors[c][i*15][j*15][2]))
+					vals[c].append((colors[c][i*10][j*10][0], colors[c][i*10][j*10][1], colors[c][i*10][j*10][2]))
 
 
 		#get min and max of each

@@ -24,7 +24,10 @@ print(boundaries)
 boundaries[2][0][0] += 0;
 boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
+boundaries[0] = ([110,0,0], [118,255,255])
+boundaries[1] = ([92,50,50], [98,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
+boundaries[3] = ([9,0,0], [11,255,255])
 print(boundaries);
 #boundaries = [(220,250),(85,140),(40,70),(0,20),(65,115)]
 #boundaries = [([115,100,195] , [120,190,230]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
@@ -78,7 +81,7 @@ for (lower, upper) in boundaries:
         cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	sd = ShapeDetector()
-	
+	ccount = 0	
 	for c in cnts:
 		shape = sd.detect(c)
 		
@@ -100,8 +103,9 @@ for (lower, upper) in boundaries:
 			print("Zero value")
 		#cv2.imshow("Image", output)
 		#cv2.waitKey(0)
+		ccount += 1
 	#end shape detetion script
-	
+	print(ccount)
 	cv2.imshow("images", np.hstack([img, output]))
 	cv2.waitKey(0)
 	i += 1
