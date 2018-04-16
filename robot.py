@@ -6,45 +6,45 @@ import ev3dev.ev3 as ev3
 lm = ev3.Motor("outA")
 rm = ev3.Motor("outD")
 
-def forward (duration, speed):
+def forward (duration):
 	t = float(dist_convert(duration))
-	s = int(speed)
+	#s = int(speed)
 	lm.reset()
 	rm.reset()
-	lm.run_to_rel_pos(position_sp = t*1000, speed_sp = s, stop_action = "coast")
-	rm.run_to_rel_pos(position_sp = t*1000, speed_sp = s, stop_action = "coast")
+	lm.run_to_rel_pos(position_sp = t*1000, speed_sp = 120, stop_action = "coast")
+	rm.run_to_rel_pos(position_sp = t*1000, speed_sp = 120, stop_action = "coast")
 	lm.wait_while('running') 
 	rm.wait_while('running')
 	time.sleep(2)
 	lm.reset()
 	rm.reset()
 
-def turn_right (duration, speed_left, speed_right):
-	sl = int(speed_left)
-	sr = int(speed_right)
-	t = float(turn_convert(int(duration)))
+def turn_right (duration):
+	#sl = int(speed_left)
+	#sr = int(speed_right)
+	t = turn_convert(int(duration))
 	lm.reset()
 	rm.reset()
 	lm.reset()
 	rm.reset()
-	lm.run_to_rel_pos(position_sp = t, speed_sp = sl, stop_action = "brake")
-	rm.run_to_rel_pos(position_sp = -t, speed_sp = -sr, stop_action = "brake")
+	lm.run_to_rel_pos(position_sp = t, speed_sp = 120, stop_action = "brake")
+	rm.run_to_rel_pos(position_sp = -t, speed_sp = -120, stop_action = "brake")
 	lm.wait_while('running')
 	rm.wait_while('running')
 	time.sleep(1)
 	lm.reset()
 	rm.reset()
 
-def turn_left (duration, speed_left, speed_right):
-	sl = int(speed_left) 
-	sr = int(speed_right) 
-	t = float(turn_convert(int(duration)))
+def turn_left (duration):
+	#sl = int(speed_left) 
+	#sr = int(speed_right) 
+	t = turn_convert(int(duration))
 	lm.reset()
 	rm.reset()
 	lm.reset()
 	rm.reset()
-	lm.run_to_rel_pos(position_sp = -t, speed_sp = -sl, stop_action = "brake") 
-	rm.run_to_rel_pos(position_sp = t, speed_sp = sr, stop_action = "brake") 
+	lm.run_to_rel_pos(position_sp = -t, speed_sp = -120, stop_action = "brake") 
+	rm.run_to_rel_pos(position_sp = t, speed_sp = 120, stop_action = "brake") 
 	lm.wait_while('running') 
 	rm.wait_while('running') 
 	time.sleep(1) 
@@ -59,7 +59,7 @@ def turn_convert (degree):
 def dist_convert(dist):
 	
 	if  int(dist) == 1:
-		ans = float(0.05)
+		ans = 0.05
 	else:
 		ans = float(int(dist)*0.05)		
 	return ans 
@@ -72,15 +72,15 @@ def execute (commands_list):
 		if (command[0] == "f"):
 			tmp1 = command[2:-1]
 			tmp2 = tmp1.split(",")
-			forward (tmp2[0], tmp2[1])
+			forward (tmp2[0])
 		elif (command[0] == "r"):
 			tmp1 = command[2:-1]
 			tmp2 = tmp1.split(",")
-			turn_right (tmp2[0],tmp2[1],tmp2[2])
+			turn_right (tmp2[0])
 		elif (command[0] == "l"):
 			tmp1 = command[2:-1]
 			tmp2 = tmp1.split(",")
-			turn_left (tmp2[0],tmp2[1],tmp2[2])
+			turn_left (tmp2[0])
 		elif (command[0] == "x"):
 			strval = ""
 			for k in range(1, len(command)):
