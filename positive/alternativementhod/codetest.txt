@@ -1,10 +1,1 @@
-forward command
-forward command
-forward command
-forward command
-forward command
-forward command
-forward command
-turn left
-preliniary for
-turn right
+f(x,120) r(x,120) x(x) 

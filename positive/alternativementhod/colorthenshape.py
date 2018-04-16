@@ -48,8 +48,10 @@ print(boundaries);
 #array for the number of times an instruction has been output to the text file, to keep track of which instructions have already been accounted for 
 instructs = [] 
 i = 0
-abr = ['b','g','y','r','w']
-
+#abr = ['b','g','y','r','w']
+abr = ['r','y','g','b']
+instrwidth = 0
+instrheight = 0
 for (lower, upper) in boundaries:
 	lower = np.array(lower, dtype='uint8')
 	upper = np.array(upper, dtype='uint8')
@@ -92,7 +94,19 @@ for (lower, upper) in boundaries:
 		#print(str(x) + ", " + str(y) + ", " + str(w) + ", " + str(h) + "....")
 		
 		cv2.drawContours(output, [c], -1, (0,255,0), 2)
-		instructs.append((abr[i], y))
+		instructs.append((abr[i], y, 0))
+
+		if(abr[i] == 'y'):
+			instructs.append(('y', y+h, 1))	
+		if(abr[i] != 'y'):
+			instrwidth = w
+			instrheight = h		
+			numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2) - 5]
+		elif(abr[i] == 'y'):
+			numROI = imgin[y+5: y+instrheight-5, x+w+5-60: x+w+int(instrwidth/2) - 5 - 60]
+			cv2.imwrite("ROI.tiff", numROI)
+		cv2.imshow("number", numROI)
+		cv2.waitKey(0)
 		#get roi of original image
 		try:
 			#cv2.imshow("img", img)
@@ -106,22 +120,27 @@ for (lower, upper) in boundaries:
 		ccount += 1
 	#end shape detetion script
 	print(ccount)
-	cv2.imshow("images", np.hstack([img, output]))
+	cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(output,cv2.COLOR_HSV2RGB)]))
 	cv2.waitKey(0)
 	i += 1
 print(instructs)
 instructs.sort(key=itemgetter(1))
 print(instructs)
+inloopcount = 0
 
 code = open("codetest.txt", 'w')
 for lines in instructs:
 	if(lines[0] == 'b'):
-		code.write('forward command\n')
+		code.write('f(x,120) ')
 	elif(lines[0] == 'g'):
-		code.write('turn left\n')
-	elif(lines[0] == 'y'):
-		code.write('preliniary for\n')
+		code.write('l(x, 0, 120) ')
+	elif(lines[0] == 'y' and lines[2] == 0):
+		#beginning of for loop
+		code.write('')
+	elif(lines[0] == 'y' and lines[2] == 1):
+		#end of for loop
+		code.write('x(x) ')
 	elif(lines[0] == 'r'):
-		code.write('turn right\n')
+		code.write('r(x,120) ')
 	else:
 		code.write('number\n')
