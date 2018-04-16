@@ -21,13 +21,13 @@ img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 calib = Calibrator()
 boundaries = calib.hueRange()
 print(boundaries)
-boundaries[2][0][0] += 0;
-boundaries[2][1][0] += -1;
+#boundaries[2][0][0] += 0;
+#boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
-boundaries[0] = ([110,0,0], [118,255,255])
-boundaries[1] = ([92,50,50], [98,255,255])
+boundaries[3] = ([116,20,20], [120,255,255])
+boundaries[1] = ([92,30,30], [99,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
-boundaries[3] = ([9,0,0], [11,255,255])
+boundaries[0] = ([8,20,20], [14,255,255])
 print(boundaries);
 #boundaries = [(220,250),(85,140),(40,70),(0,20),(65,115)]
 #boundaries = [([115,100,195] , [120,190,230]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
@@ -49,7 +49,7 @@ print(boundaries);
 instructs = [] 
 i = 0
 #abr = ['b','g','y','r','w']
-abr = ['r','y','g','b']
+abr = ['b','y','g','r']
 instrwidth = 0
 instrheight = 0
 for (lower, upper) in boundaries:
@@ -66,6 +66,10 @@ for (lower, upper) in boundaries:
 		mask = cv2.inRange(tempimg, lower, upper);
 		output = cv2.bitwise_and(img, img, mask=mask)
 	#shape detection
+	if i == 3:
+		preoutput = output
+		cv2.cvtColor(output, cv2.COLOR_HSV2RGB)
+		cv2.cvtColor(output, cv2.COLOR_RGB2GRAY)
 	resized = imutils.resize(output, width=300)
 	ratio = output.shape[0] / float(resized.shape[0])
 
@@ -78,7 +82,7 @@ for (lower, upper) in boundaries:
 		gray = cv2.cvtColor(resized, cv2.COLOR_RGB2GRAY)
 	blurred = cv2.GaussianBlur(gray, (5,5), 0)
 	thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
-	
+
 	cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
@@ -101,12 +105,18 @@ for (lower, upper) in boundaries:
 		if(abr[i] != 'y'):
 			instrwidth = w
 			instrheight = h		
-			numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2) - 5]
+			numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2)]
 		elif(abr[i] == 'y'):
-			numROI = imgin[y+5: y+instrheight-5, x+w+5-60: x+w+int(instrwidth/2) - 5 - 60]
-			cv2.imwrite("ROI.tiff", numROI)
-		cv2.imshow("number", numROI)
-		cv2.waitKey(0)
+			numROI = imgin[y+5: y+instrheight-5, x+w+5: x+w+int(instrwidth/2) - 5 ]
+			try:
+				cv2.imwrite("ROI.tiff", numROI)
+			except:
+				print("pixel detected too far")
+		try:
+			cv2.imshow("number", numROI)
+			cv2.waitKey(0)
+		except:
+			print("pixel detected too far show")
 		#get roi of original image
 		try:
 			#cv2.imshow("img", img)
@@ -120,7 +130,10 @@ for (lower, upper) in boundaries:
 		ccount += 1
 	#end shape detetion script
 	print(ccount)
-	cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(output,cv2.COLOR_HSV2RGB)]))
+	if i == 3:
+		cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(preoutput, cv2.COLOR_HSV2RGB)]))
+	else:
+		cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(output,cv2.COLOR_HSV2RGB)]))
 	cv2.waitKey(0)
 	i += 1
 print(instructs)
@@ -131,16 +144,16 @@ inloopcount = 0
 code = open("codetest.txt", 'w')
 for lines in instructs:
 	if(lines[0] == 'b'):
-		code.write('f(x,120) ')
+		code.write('f,x ')
 	elif(lines[0] == 'g'):
-		code.write('l(x, 0, 120) ')
+		code.write('l,x ')
 	elif(lines[0] == 'y' and lines[2] == 0):
 		#beginning of for loop
-		code.write('')
+		code.write('(,x ')
 	elif(lines[0] == 'y' and lines[2] == 1):
 		#end of for loop
-		code.write('x(x) ')
+		code.write('),x ')
 	elif(lines[0] == 'r'):
-		code.write('r(x,120) ')
+		code.write('r,x ')
 	else:
 		code.write('number\n')
