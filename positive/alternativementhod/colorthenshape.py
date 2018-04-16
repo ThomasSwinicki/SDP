@@ -1,5 +1,6 @@
 from shapedetector import ShapeDetector
 from calibrateHSV import Calibrator
+from run_tes import run_tesseract
 import numpy as np
 import cv2
 import argparse
@@ -25,9 +26,9 @@ print(boundaries)
 #boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
 boundaries[3] = ([116,20,20], [120,255,255])
-boundaries[1] = ([92,30,30], [99,255,255])
+boundaries[1] = ([92,50,50], [99,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
-boundaries[0] = ([8,20,20], [14,255,255])
+boundaries[0] = ([7,20,20], [14,255,255])
 print(boundaries);
 #boundaries = [(220,250),(85,140),(40,70),(0,20),(65,115)]
 #boundaries = [([115,100,195] , [120,190,230]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
@@ -48,6 +49,7 @@ print(boundaries);
 #array for the number of times an instruction has been output to the text file, to keep track of which instructions have already been accounted for 
 instructs = [] 
 i = 0
+inst = 0
 #abr = ['b','g','y','r','w']
 abr = ['b','y','g','r']
 instrwidth = 0
@@ -98,20 +100,30 @@ for (lower, upper) in boundaries:
 		#print(str(x) + ", " + str(y) + ", " + str(w) + ", " + str(h) + "....")
 		
 		cv2.drawContours(output, [c], -1, (0,255,0), 2)
-		instructs.append((abr[i], y, 0))
+		instructs.append([abr[i], y, 0, 0])
 
 		if(abr[i] == 'y'):
-			instructs.append(('y', y+h, 1))	
+			instructs.append(['y', y+h, 1, ''])	
 		if(abr[i] != 'y'):
 			instrwidth = w
 			instrheight = h		
 			numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2)]
 		elif(abr[i] == 'y'):
 			numROI = imgin[y+5: y+instrheight-5, x+w+5: x+w+int(instrwidth/2) - 5 ]
-			try:
-				cv2.imwrite("ROI.tiff", numROI)
-			except:
-				print("pixel detected too far")
+		#try:
+		cv2.imwrite("ROI.tiff", numROI)
+		x = run_tesseract('ROI.tiff')
+		print(type(x))
+		instructs[inst][3] = x
+		print(instructs[inst])
+		print(instructs[inst][3])
+		if(abr[i] == 'y'):
+			instructs[inst+1][3] = x
+			inst +=2
+		else:
+			inst += 1
+		#except:
+			#print("writing tiff or number detection error")
 		try:
 			cv2.imshow("number", numROI)
 			cv2.waitKey(0)
@@ -144,16 +156,16 @@ inloopcount = 0
 code = open("codetest.txt", 'w')
 for lines in instructs:
 	if(lines[0] == 'b'):
-		code.write('f,x ')
+		code.write('f,' + str(lines[3]) + ' ')
 	elif(lines[0] == 'g'):
-		code.write('l,x ')
+		code.write('l,' + str(lines[3]) + ' ')
 	elif(lines[0] == 'y' and lines[2] == 0):
 		#beginning of for loop
-		code.write('(,x ')
+		code.write('(,' + str(lines[3]) + ' ')
 	elif(lines[0] == 'y' and lines[2] == 1):
 		#end of for loop
-		code.write('),x ')
+		code.write('),' + str(lines[3]) + ' ')
 	elif(lines[0] == 'r'):
-		code.write('r,x ')
+		code.write('r,' + str(lines[3]) + ' ')
 	else:
 		code.write('number\n')
