@@ -7,6 +7,7 @@ import argparse
 from operator import itemgetter
 import imutils
 import subprocess
+import time
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="path to input image")
@@ -16,6 +17,7 @@ shrinkcommand = "python3 shrink.py --image " + args["image"]
 subprocess.Popen(shrinkcommand.split(), stdout=subprocess.PIPE)
 args["image"] = args["image"].replace(".jpg", "_small.jpg")
 #for HSV
+time.sleep(0.5)
 imgin = cv2.imread(args["image"])
 img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 
