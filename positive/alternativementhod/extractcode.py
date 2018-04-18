@@ -25,10 +25,7 @@ img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 #img = cv2.imread(args["image"])
 
 #boundaries are in the order of Red, Yellow, Green, Blue
-calib = Calibrator()
-boundaries = calib.hueRange()
-#boundaries[2][0][0] += 0;
-#boundaries[2][1][0] += -1;
+boundaries = [i for i in range(4)]
 #change the ranges for green to be RGB
 boundaries[3] = ([116,20,20], [120,255,255])
 boundaries[1] = ([90,50,50], [99,255,255])
