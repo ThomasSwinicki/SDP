@@ -7,6 +7,7 @@ import argparse
 from operator import itemgetter
 import imutils
 import subprocess
+import time
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="path to input image")
@@ -18,6 +19,7 @@ subprocess.Popen(shrinkcommand.split(), stdout=subprocess.PIPE)
 args["image"] = args["image"].replace(".jpg", "_small.jpg")
 print(args["image"])
 #for HSV
+time.sleep(0.5)
 imgin = cv2.imread(args["image"])
 img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 
@@ -158,20 +160,26 @@ print(instructs)
 inloopcount = 0
 
 code = open("codetest.txt", 'w')
+codestring = ''
 for lines in instructs:
 	if(lines[0] == 'b'):
 		code.write('f,' + str(lines[3]) + ' ')
+		codestring += 'f,' + str(lines[3]) + ' '
 	elif(lines[0] == 'g'):
 		code.write('l,' + str(lines[3]) + ' ')
+		codestring += 'l,' + str(lines[3]) + ' '
 	elif(lines[0] == 'y' and lines[2] == 0):
 		#beginning of for loop
 		code.write('(,' + str(lines[3]) + ' ')
+		codestring += '(,' + str(lines[3]) + ' '
 	elif(lines[0] == 'y' and lines[2] == 1):
 		#end of for loop
 		code.write('),' + str(lines[3]) + ' ')
+		codestring += '),' + str(lines[3]) + ' '
 	elif(lines[0] == 'r'):
 		code.write('r,' + str(lines[3]) + ' ')
+		codestring += 'r,' + str(lines[3]) + ' '
 	else:
 		code.write('number\n')
-readcode = "cat codetest.txt"
-subprocess.Popen(readcode, shell=True)
+print(codestring)
+
