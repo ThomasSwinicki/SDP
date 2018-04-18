@@ -26,7 +26,7 @@ print(boundaries)
 #boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
 boundaries[3] = ([116,20,20], [120,255,255])
-boundaries[1] = ([92,50,50], [99,255,255])
+boundaries[1] = ([90,50,50], [99,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
 boundaries[0] = ([7,20,20], [14,255,255])
 print(boundaries);
@@ -113,9 +113,7 @@ for (lower, upper) in boundaries:
 		#try:
 		cv2.imwrite("ROI.tiff", numROI)
 		x = run_tesseract('ROI.tiff')
-		print(type(x))
 		instructs[inst][3] = x
-		print(instructs[inst])
 		print(instructs[inst][3])
 		if(abr[i] == 'y'):
 			instructs[inst+1][3] = x
