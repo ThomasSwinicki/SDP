@@ -50,8 +50,9 @@ class Calibrator:
 		try:
 			#cv2.imshow("img", img)
 			#cv2.waitKey(0)
-			cv2.imshow("Instruct", img[y:(y+h), x:(x+w)])
-			cv2.waitKey(0)
+			#use for debuggin
+			#cv2.imshow("Instruct", img[y:(y+h), x:(x+w)])
+			#cv2.waitKey(0)
 			allcolors = img[y:(y+h), x:(x+w)]
 		except:
 				print("Zero value")
@@ -84,9 +85,10 @@ class Calibrator:
 		#white = img[650:670,300:400]	
 		colors = [red, yellow, green, blue] #, white]
 
-		for c in colors:
-			cv2.imshow('ROI', c)
-			cv2.waitKey(0)
+		#for debugging
+		#for c in colors:
+		#	cv2.imshow('ROI', c)
+		#	cv2.waitKey(0)
 
 		height, width= red.shape[:2]
 		vals = [[] for i in range(5)]
