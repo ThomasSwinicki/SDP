@@ -109,7 +109,6 @@ for (lower, upper) in boundaries:
 		
 		cv2.drawContours(output, [c], -1, (0,255,0), 2)
 		instructs.append([abr[i], y, 0, 0])
-
 		if(abr[i] == 'y'):
 			instructs.append(['y', y+h, 1, ''])	
 		if(abr[i] != 'y'):
