@@ -15,18 +15,18 @@ args = vars(ap.parse_args())
 
 shrinkcommand = "python3 shrink.py --image " + args["image"]
 subprocess.Popen(shrinkcommand.split(), stdout=subprocess.PIPE)
-args["image"] = args["image"].replace(".jpg", "_small.jpg")
+args["image"] = 'images/' + args["image"].replace(".jpg", "_small.jpg")
 #for HSV
-time.sleep(0.5)
-imgin = cv2.imread(args["image"])
+time.sleep(1)
+imgin = cv2.imread('image_small.jpg')
 img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 
 #for RGB
 #img = cv2.imread(args["image"])
 
 #boundaries are in the order of Red, Yellow, Green, Blue
-calib = Calibrator()
-boundaries = calib.hueRange()
+# calib = Calibrator()
+boundaries = [i for i in range(4)]
 #boundaries[2][0][0] += 0;
 #boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
