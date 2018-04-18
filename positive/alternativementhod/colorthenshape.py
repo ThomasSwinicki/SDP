@@ -6,11 +6,17 @@ import cv2
 import argparse
 from operator import itemgetter
 import imutils
+import subprocess
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="path to input image")
 args = vars(ap.parse_args())
 
+shrinkcommand = "python3 shrink.py --image " + args["image"]
+print(shrinkcommand)
+subprocess.Popen(shrinkcommand.split(), stdout=subprocess.PIPE)
+args["image"] = args["image"].replace(".jpg", "_small.jpg")
+print(args["image"])
 #for HSV
 imgin = cv2.imread(args["image"])
 img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
@@ -155,6 +161,7 @@ code = open("codetest.txt", 'w')
 for lines in instructs:
 	if(lines[0] == 'b'):
 		code.write('f,' + str(lines[3]) + ' ')
+		print('f,' + str(lines[3]) + ' ')
 	elif(lines[0] == 'g'):
 		code.write('l,' + str(lines[3]) + ' ')
 	elif(lines[0] == 'y' and lines[2] == 0):
