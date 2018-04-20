@@ -3,7 +3,7 @@ import subprocess
 # input_img = argv[1]
 def run_tesseract(input_img):
 	command   = 'tesseract {} stdout --psm 7 digits'.format(input_img)
-
+	print(command)
 	proc = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
 	s    = proc.communicate()[0]
 	num  = ''

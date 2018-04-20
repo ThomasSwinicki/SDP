@@ -14,10 +14,10 @@ ap.add_argument("-i", "--image", required=True, help="path to input image")
 args = vars(ap.parse_args())
 
 shrinkcommand = "python3 shrink.py --image " + args["image"]
-print(shrinkcommand)
+#print(shrinkcommand)
 subprocess.Popen(shrinkcommand.split(), stdout=subprocess.PIPE)
 args["image"] = args["image"].replace(".jpg", "_small.jpg")
-print(args["image"])
+#print(args["image"])
 #for HSV
 time.sleep(0.5)
 imgin = cv2.imread(args["image"])
@@ -29,15 +29,15 @@ img = cv2.cvtColor(imgin, cv2.COLOR_RGB2HSV);
 #boundaries are in the order of Red, Yellow, Green, Blue
 calib = Calibrator()
 boundaries = calib.hueRange()
-print(boundaries)
+#print(boundaries)
 #boundaries[2][0][0] += 0;
 #boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
-boundaries[3] = ([116,20,20], [120,255,255])
-boundaries[1] = ([90,50,50], [99,255,255])
+boundaries[3] = ([114,20,20], [120,255,255])
+boundaries[1] = ([90,70,70], [99,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
 boundaries[0] = ([7,20,20], [14,255,255])
-print(boundaries);
+#print(boundaries);
 #boundaries = [(220,250),(85,140),(40,70),(0,20),(65,115)]
 #boundaries = [([115,100,195] , [120,190,230]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
 #boundaries = [([110,0,0] , [120,255,255]),([89,0,0] , [94,255,255]),([42,0,0] , [47,255,255]),([5,0,0] ,[15,255,255]),([95,0,0],[110,255,255])]
@@ -69,6 +69,7 @@ for (lower, upper) in boundaries:
 	if i != 2:
 		mask = cv2.inRange(img, lower, upper)
 		output = cv2.bitwise_and(img, img, mask=mask)
+		#cv2.cvtColor(output, cv2.COLOR_HSV2RGB)
 		cv2.imshow("output", output)
 		cv2.waitKey(0)
 	else:#use RGB for green
@@ -98,6 +99,7 @@ for (lower, upper) in boundaries:
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	sd = ShapeDetector()
 	ccount = 0	
+	print("working on " + str(abr[i]) +" instructions")
 	for c in cnts:
 		shape = sd.detect(c)
 		
@@ -114,14 +116,17 @@ for (lower, upper) in boundaries:
 		if(abr[i] != 'y'):
 			instrwidth = w
 			instrheight = h		
-			numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2)]
+			try:
+				numROI = imgin[y+5: y + h-5, x+w+5: x+w+int(w/2)]
+			except:
+				print("floating point exception on numROI")
 		elif(abr[i] == 'y'):
 			numROI = imgin[y+5: y+instrheight-5, x+w+5: x+w+int(instrwidth/2) - 5 ]
 		#try:
 		cv2.imwrite("ROI.tiff", numROI)
 		x = run_tesseract('ROI.tiff')
 		instructs[inst][3] = x
-		print(instructs[inst][3])
+		print("Number for instruction: " + str(instructs[inst][3]))
 		if(abr[i] == 'y'):
 			instructs[inst+1][3] = x
 			inst +=2
@@ -141,12 +146,12 @@ for (lower, upper) in boundaries:
 			cv2.imshow("Instruct", img[y:(y+h), x:(x+w)])
 			cv2.waitKey(0)
 		except:
-			print("Zero value")
+			print("Zero value for instruct")
 		#cv2.imshow("Image", output)
 		#cv2.waitKey(0)
 		ccount += 1
 	#end shape detetion script
-	print(ccount)
+	print("contour count: " + str(ccount))
 	if i == 3:
 		cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(preoutput, cv2.COLOR_HSV2RGB)]))
 	else:
