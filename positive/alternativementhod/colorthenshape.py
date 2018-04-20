@@ -34,7 +34,7 @@ boundaries = calib.hueRange()
 #boundaries[2][1][0] += -1;
 #change the ranges for green to be RGB
 boundaries[3] = ([114,20,20], [120,255,255])
-boundaries[1] = ([90,70,70], [99,255,255])
+boundaries[1] = ([90,80,80], [99,255,255])
 boundaries[2] = ([41, 68, 24], [112,166,106])
 boundaries[0] = ([7,20,20], [14,255,255])
 #print(boundaries);
@@ -69,7 +69,6 @@ for (lower, upper) in boundaries:
 	if i != 2:
 		mask = cv2.inRange(img, lower, upper)
 		output = cv2.bitwise_and(img, img, mask=mask)
-		#cv2.cvtColor(output, cv2.COLOR_HSV2RGB)
 		cv2.imshow("output", output)
 		cv2.waitKey(0)
 	else:#use RGB for green
@@ -77,10 +76,6 @@ for (lower, upper) in boundaries:
 		mask = cv2.inRange(tempimg, lower, upper);
 		output = cv2.bitwise_and(img, img, mask=mask)
 	#shape detection
-	if i == 3:
-		preoutput = output
-		cv2.cvtColor(output, cv2.COLOR_HSV2RGB)
-		cv2.cvtColor(output, cv2.COLOR_RGB2GRAY)
 	resized = imutils.resize(output, width=300)
 	ratio = output.shape[0] / float(resized.shape[0])
 
@@ -92,7 +87,9 @@ for (lower, upper) in boundaries:
 		#for RGB
 		gray = cv2.cvtColor(resized, cv2.COLOR_RGB2GRAY)
 	blurred = cv2.GaussianBlur(gray, (5,5), 0)
-	thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+	thresh = cv2.threshold(blurred, 30, 255, cv2.THRESH_BINARY)[1]
+	cv2.imshow("thresh", thresh)
+	cv2.waitKey(0)
 
 	cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
@@ -152,10 +149,7 @@ for (lower, upper) in boundaries:
 		ccount += 1
 	#end shape detetion script
 	print("contour count: " + str(ccount))
-	if i == 3:
-		cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(preoutput, cv2.COLOR_HSV2RGB)]))
-	else:
-		cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(output,cv2.COLOR_HSV2RGB)]))
+	cv2.imshow("images", np.hstack([imgin, cv2.cvtColor(output,cv2.COLOR_HSV2RGB)]))
 	cv2.waitKey(0)
 	i += 1
 print(instructs)
