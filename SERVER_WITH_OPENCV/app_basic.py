@@ -1,4 +1,4 @@
-import os, subprocess
+import os, subprocess, random
 from flask import Flask, render_template, request
 
 __author__ = 'ibininja'
@@ -31,13 +31,14 @@ def upload():
 		
 	for file in request.files.getlist("file"):
 		print(file)
-		filename = file.filename
+		filename = 'image'+str(random.randint(100,999))+'.jpg'
+		print('filename = {}'.format(filename))
 		destination = "/".join([target, filename])
 		print(destination)
 		file.save(destination)
 
 		print('destination = {}'.format(destination))
-		command = 'python extractcode.py --image ' + destination
+		command = 'python extract.py --image ' + destination
 		proc    = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 		result  = proc.communicate()[0].decode('utf-8')
 		print('Result: {}'.format(result))

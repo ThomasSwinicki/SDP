@@ -1,17 +1,14 @@
 #script to shrink images to a quarter of their size
-import numpy as np
-import cv2
-import argparse
+from random import randint
+from cv2 import imread, imwrite, resize
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, help="path to input image")
-args = vars(ap.parse_args())
+def shrink_it(img_name):
+	img = imread(img_name)
+	img_name = img_name[:-4]
 
-img = cv2.imread(args["image"])
-args["image"] = args["image"][:-4]
+	#img = cv2.imread('IMG_7559.jpg')
 
-#img = cv2.imread('IMG_7559.jpg')
-
-smaller = cv2.resize(img, (0,0), fx=0.25, fy=0.25)
-
-cv2.imwrite('image_small.jpg', smaller)
+	smaller = resize(img, (0,0), fx=0.25, fy=0.25)
+	name    = 'images/image_small'+str(randint(100,999))+'.jpg'
+	imwrite(name, smaller)
+	return name
