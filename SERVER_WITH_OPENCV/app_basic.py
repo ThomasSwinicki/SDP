@@ -15,7 +15,7 @@ def index():
 def my_form_post():
 	text = request.form['text']
 	processed_text = text.upper()
-	command = "echo \"python3 robot.py '"+text+"'\" | ssh robot@ev3dev.local"
+	command = "echo \"python3 robot.py '"+text+"'\" | ssh -T robot@ev3dev.local"
 	print(processed_text)
 	os.system('echo ' + processed_text)
 
