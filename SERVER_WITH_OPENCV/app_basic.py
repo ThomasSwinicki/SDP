@@ -7,6 +7,13 @@ app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+def result_to_file(result):
+	temp_file = open('temp.sh', 'w')
+	temp_file.write('#!/usr/bin/env bash\n')
+	temp_file.write("python3 robot.py '{}'\n".format(result))
+	temp_file.close()
+	return 'cat temp.sh | nc localhost 5900'
+
 @app.route("/")
 def index():
 	return render_template("upload.html")
@@ -14,10 +21,11 @@ def index():
 @app.route('/', methods=['POST'])
 def my_form_post():
 	text = request.form['text']
-	processed_text = text.upper()
-	command = "echo \"python3 robot.py '"+text+"'\" | ssh -T robot@ev3dev.local"
-	print(processed_text)
-	os.system('echo ' + processed_text)
+	result = text.lower()
+	print('Result: {}'.format(result))
+
+	proc = subprocess.Popen(result_to_file(result), shell=True)
+	proc.communicate()
 
 	return render_template("upload.html")
 
@@ -40,8 +48,11 @@ def upload():
 		print('destination = {}'.format(destination))
 		command = 'python extract.py --image ' + destination
 		proc    = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-		result  = proc.communicate()[0].decode('utf-8')
+		result  = proc.communicate()[0].decode('utf-8').strip()
 		print('Result: {}'.format(result))
+		
+		proc    = subprocess.Popen(result_to_file(result), shell=True)
+		proc.communicate()
 		# os.system('rm -vrf ' + destination)
 	
 	text = request.form['text']	

@@ -71,7 +71,7 @@ for (lower, upper) in boundaries:
 		c *= ratio
 		c = c.astype("int")
 		x,y,w,h = boundingRect(c)
-		print(abr[i] + " width : " + str(w))
+		#print(abr[i] + " width : " + str(w))
 		if(w < 30):
 			continue
 		
@@ -108,10 +108,10 @@ for (lower, upper) in boundaries:
 			imwrite("ROI.tiff", tmpROI)
 			x = run_tesseract('ROI.tiff')
 			thresh_val += 25
-			print('Current thresh value: {}'.format(thresh_val))
+			#print('Current thresh value: {}'.format(thresh_val))
 
 		if int(x) > 180:
-			print('found number greater than 180: {}'.format(x))
+			#print('found number greater than 180: {}'.format(x))
 			tmp = list(x)[::-1]
 			try:
 				tmp.remove('1')
