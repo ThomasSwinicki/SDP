@@ -3,7 +3,7 @@ from shapedetector import ShapeDetector
 from run_tes  import run_tesseract
 from shrink   import shrink_it
 from numpy    import array
-from cv2      import imread, cvtColor, GaussianBlur, threshold, findContours, boundingRect, imwrite, inRange, bitwise_and
+from cv2      import imshow, waitKey, imread, cvtColor, GaussianBlur, threshold, findContours, boundingRect, imwrite, inRange, bitwise_and
 from cv2      import COLOR_RGB2HSV, COLOR_HSV2RGB, COLOR_RGB2GRAY, THRESH_BINARY, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE
 from argparse import ArgumentParser
 from operator import itemgetter
@@ -23,10 +23,10 @@ img      = cvtColor(imgin, COLOR_RGB2HSV);
 
 #boundaries are in the order of Blue, Yellow, Green, Red
 boundaries = [i for i in range(4)]
-boundaries[3] = ([117,40,40], [120,255,255])
+boundaries[3] = ([114,40,40], [120,255,255])
 boundaries[1] = ([90,80,80], [99,255,255])
-boundaries[2] = ([35,20,20], [60,255,255])
-boundaries[0] = ([7,20,20], [13,255,255])
+boundaries[2] = ([35,20,20], [65,255,255])
+boundaries[0] = ([5,20,20], [13,255,255])
 
 #array for the number of times an instruction has been output to the text file, to keep track of which instructions have already been accounted for 
 instructs = [] 
@@ -72,7 +72,7 @@ for (lower, upper) in boundaries:
 		c = c.astype("int")
 		x,y,w,h = boundingRect(c)
 		#print(abr[i] + " width : " + str(w))
-		if(w < 30):
+		if(w < 40):
 			continue
 		
 		#drawContours(output, [c], -1, (0,255,0), 2)
@@ -95,10 +95,8 @@ for (lower, upper) in boundaries:
 
 		#try:
 		imwrite("ROI.tiff", numROI)
-		x = run_tesseract('ROI.tiff')
+		x = run_tesseract('ROI.tiff')	
 		numROI = cvtColor(numROI, COLOR_RGB2GRAY)
-		#imshow("number", numROI)
-		#waitKey(0)
 		thresh_val = 50
 		while (x == '' and thresh_val < 255):
 			tmpROI = GaussianBlur(numROI, (5,5), 0)
@@ -116,7 +114,11 @@ for (lower, upper) in boundaries:
 			try:
 				tmp.remove('1')
 			except:
-				pass
+				try:
+					tmp.remove('7')
+				except:
+					pass
+			
 			x = ''.join(tmp[::-1])
 
 		instructs[inst][3] = x
