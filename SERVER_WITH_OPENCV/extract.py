@@ -107,31 +107,40 @@ for (lower, upper) in boundaries:
 			x = run_tesseract('ROI.tiff')
 			thresh_val += 25
 			#print('Current thresh value: {}'.format(thresh_val))
-
-		if int(x) > 180:
-			#print('found number greater than 180: {}'.format(x))
-			tmp = list(x)[::-1]
-			try:
-				tmp.remove('1')
-			except:
+		try:
+			if int(x) > 180:
+				#print('found number greater than 180: {}'.format(x))
+				tmp = list(x)[::-1]
 				try:
-					tmp.remove('7')
+					tmp.remove('1')
 				except:
-					pass
-			
-			x = ''.join(tmp[::-1])
-		if(abr[i] == 'b' and int(x) > 10):
-			tmp = list(x)[::-1]
-			try
-				tmp.remove('1')
-			except:
+					try:
+						tmp.remove('7')
+					except:
+						pass
+				
+				x = ''.join(tmp[::-1])
+			if abr[i] == 'b' and int(x) > 10:
+				tmp = list(x)[::-1]
 				try:
-					tmp.remove('7')
+					tmp.remove('1')
 				except:
-					pass
-			x = ''.join(tmp[::-1])
-		
-
+					try:
+						tmp.remove('7')
+					except:
+						pass
+				x = ''.join(tmp[::-1])
+			if abr[i] == 'y' int(x) > 10 and int(x) < 20 and int(x) != 12:
+				tmp = list(x)[::-1]
+				try:
+					tmp.remove('1')
+				except:
+					try:
+						tmp.remove('7')
+					except:
+						pass	
+		except:
+			print("num not detected")
 		instructs[inst][3] = x
 		if(abr[i] == 'y'):
 			instructs[inst+1][3] = x
