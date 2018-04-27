@@ -120,6 +120,17 @@ for (lower, upper) in boundaries:
 					pass
 			
 			x = ''.join(tmp[::-1])
+		if(abr[i] == 'b' and int(x) > 10):
+			tmp = list(x)[::-1]
+			try
+				tmp.remove('1')
+			except:
+				try:
+					tmp.remove('7')
+				except:
+					pass
+			x = ''.join(tmp[::-1])
+		
 
 		instructs[inst][3] = x
 		if(abr[i] == 'y'):
