@@ -130,7 +130,7 @@ for (lower, upper) in boundaries:
 					except:
 						pass
 				x = ''.join(tmp[::-1])
-			if abr[i] == 'y' int(x) > 10 and int(x) < 20 and int(x) != 12:
+			if abr[i] == 'y' and int(x) == 18:
 				tmp = list(x)[::-1]
 				try:
 					tmp.remove('1')
