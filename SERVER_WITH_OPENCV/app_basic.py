@@ -1,4 +1,6 @@
 import os, subprocess, random
+from expand_for_loop import run_commands
+from send2robot      import send_commands
 from flask import Flask, render_template, request
 
 __author__ = 'ibininja'
@@ -7,26 +9,8 @@ app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-def result_to_file(result):
-	temp_file = open('temp.sh', 'w')
-	temp_file.write('#!/usr/bin/env bash\n')
-	temp_file.write("python3 robot.py '{}'\n".format(result))
-	temp_file.close()
-	return 'cat temp.sh | nc localhost 5900'
-
 @app.route("/")
 def index():
-	return render_template("upload.html")
-
-@app.route('/', methods=['POST'])
-def my_form_post():
-	text = request.form['text']
-	result = text.lower()
-	print('Result: {}'.format(result))
-
-	proc = subprocess.Popen(result_to_file(result), shell=True)
-	proc.communicate()
-
 	return render_template("upload.html")
 
 @app.route("/upload", methods=['POST'])
@@ -51,10 +35,8 @@ def upload():
 		result  = proc.communicate()[0].decode('utf-8').strip()
 		print('Result: {}'.format(result))
 		
-		proc    = subprocess.Popen(result_to_file(result), shell=True)
-		proc.communicate()
-		# os.system('rm -vrf ' + destination)
-	
+		send_commands(run_commands(result))
+
 	text = request.form['text']	
 	print(text)
 
